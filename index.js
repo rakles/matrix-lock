@@ -27,7 +27,7 @@ async function run(){
 
     const step = core.getInput('step',{required: true})
     switch (step) {
-      case "init":
+      case "init":{
         const order = core.getInput('order',{required: true})
        
 
@@ -41,9 +41,10 @@ async function run(){
         )
 
         core.info("Matrix lock initialized")
-
-        break
-      case "wait":
+			}
+    	break
+      case "wait":{
+				core.info("Started waiting")
         const id = core.getInput('id',{required: true})
         const retryCount = core.getInput('retry-count')
         const retryDelay = core.getInput('retry-delay')
@@ -58,7 +59,7 @@ async function run(){
           )
 
           const lockFile = fs.readFileSync(fullPath, { encoding: 'utf8' })
-
+					core.info(`${index}: Lock file content: ${lockFile}`)
           if (id === lockFile.split(",",)[0]){
             shouldContinue = true
             break
@@ -69,10 +70,14 @@ async function run(){
 
         if (!shouldContinue){
           core.setFailed("Max retries reached")
+		  		break
         }
 
         core.info("Matrix unlocked, continuing")
-      case "continue":
+			}
+			break
+      case "continue":{
+				core.info("Continue")
         const downloadRespone = await artifactClient.downloadArtifact(
           ARTIFACT_NAME,
           workspace,
@@ -82,6 +87,7 @@ async function run(){
         let lockFile = fs.readFileSync(fullPath, { encoding: 'utf8' })
         lockFile = lockFile.split(",").slice(1).join(",")
 
+				core.info(`unlock file content: ${lockFile}`)
         fs.writeFileSync(fullPath, lockFile)
 
         const uploadResponseB = await artifactClient.uploadArtifact(
@@ -92,10 +98,12 @@ async function run(){
         )
         
         core.info("Matrix lock freed")
-        break
-      default:
+			}
+    	break
+      default:{
         core.setFailed("Unkown step: " + step)
-        break
+	  	}
+    	break
     }
   } catch (error){
     core.setFailed(error.message)
