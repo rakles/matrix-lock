@@ -53,7 +53,6 @@ async function run(){
         for (let index = 0; index < retryCount; index++) {
           const downloadRespone = await artifactClient.downloadArtifact(
             ARTIFACT_NAME,
-            [fullPath],
             workspace,
             { continueOnError: false }
           )
@@ -76,7 +75,6 @@ async function run(){
       case "continue":
         const downloadRespone = await artifactClient.downloadArtifact(
           ARTIFACT_NAME,
-          [fullPath],
           workspace,
           { continueOnError: false }
         )
