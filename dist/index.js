@@ -32852,9 +32852,9 @@ async function run(){
             { continueOnError: false }
           )
 
-          const lockFile = fs.readFileSync(fullPath)
+          const lockFile = fs.readFileSync(fullPath, { encoding: 'utf8' })
 
-          if (id === lockFile.split(",")[0]){
+          if (id === lockFile.split(",",)[0]){
             shouldContinue = true
             break
           }
@@ -32874,7 +32874,7 @@ async function run(){
           { continueOnError: false }
         )
         
-        const lockFile = fs.readFileSync(fullPath)
+        let lockFile = fs.readFileSync(fullPath, { encoding: 'utf8' })
         lockFile = lockFile.split(",").slice(1).join(",")
 
         fs.writeFileSync(fullPath, lockFile)
