@@ -32798,19 +32798,6 @@ const artifact = __nccwpck_require__(9151)
 const fs = __nccwpck_require__(7147)
 const path = __nccwpck_require__(1017)
 
-//try {
-// `who-to-greet` your mama
-// const nameToGreet = core.getInput('who-to-greet');
-// console.log(`Hello ${nameToGreet}!`);
-//const time = (new Date()).toTimeString();
-//core.setOutput("time", time);
-// Get the JSON webhook payload for the event that triggered the workflow
-//const payload = JSON.stringify(github.context.payload, undefined, 2)
-//console.log(`The event payload: ${payload}`);
-//} catch (error) {
-//core.setFailed(error.message);
-//}
-
 const FILE_NAME = "matrix-lock-17c3b450-53fd-4b8d-8df8-6b5af88022dc.lock"
 const ARTIFACT_NAME = "matrix-lock"
 
@@ -32840,7 +32827,7 @@ async function run() {
 				break
 			case "wait":
 				{
-					core.info("Started waiting")
+					core.info("Waiting for lock")
 					const id = core.getInput("id", { required: true })
 					const retryCount = core.getInput("retry-count")
 					const retryDelay = core.getInput("retry-delay")
@@ -32848,6 +32835,7 @@ async function run() {
 					shouldContinue = false
 
 					for (let index = 0; index < retryCount; index++) {
+						core.info(`Try: ${index + 1}/${retryCount}`)
 						const downloadRespone =
 							await artifactClient.downloadArtifact(
 								ARTIFACT_NAME,
@@ -32858,7 +32846,7 @@ async function run() {
 						const lockFile = fs.readFileSync(fullPath, {
 							encoding: "utf8",
 						})
-						core.info(`${index}: Lock file content: ${lockFile}`)
+
 						if (id === lockFile.split(",")[0]) {
 							shouldContinue = true
 							break
@@ -32872,7 +32860,7 @@ async function run() {
 						break
 					}
 
-					core.info("Matrix unlocked, continuing")
+					core.info("Lock ready")
 				}
 				break
 			case "continue":
@@ -32890,7 +32878,6 @@ async function run() {
 					})
 					lockFile = lockFile.split(",").slice(1).join(",")
 
-					core.info(`unlock file content: ${lockFile}`)
 					fs.writeFileSync(fullPath, lockFile)
 
 					const uploadResponseB = await artifactClient.uploadArtifact(
@@ -32900,7 +32887,7 @@ async function run() {
 						{ continueOnError: false }
 					)
 
-					core.info("Matrix lock freed")
+					core.info("Unlocking")
 				}
 				break
 			default:
