@@ -11,6 +11,12 @@ inputs:
   id:
     description: 'the identifier of which it should wait and act | required for the init continue'
     required: false
+  retry-count:
+    description: 'the count of how many times we wait for the lock'
+    default: 6
+  retry-delay:
+    description: 'the delay in seconds before retrying'
+    default: 10
 
 runs:
   using: 'node20'
