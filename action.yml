@@ -1,0 +1,17 @@
+name: 'Matrix Lock'
+description: 'Locking mechanism for Matrices'
+
+inputs:
+  step:
+    description: 'init | wait | continue'
+    required: true
+  order:
+    description: 'the order for the whole process | required for the init step'
+    required: false
+  id:
+    description: 'the identifier of which it should wait and act | required for the init continue'
+    required: false
+
+runs:
+  using: 'node20'
+  main: 'index.js'
