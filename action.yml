@@ -1,6 +1,10 @@
 name: 'Matrix Lock'
 description: 'Locking mechanism for Matrices'
 
+branding:
+  icon: 'lock'
+  color: 'blue'
+
 inputs:
   step:
     description: 'init | wait | continue'
